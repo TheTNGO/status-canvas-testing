@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <style>
+    #myCanvas {
+      outline: 1px solid #000;
+    }
+
+    #generatedCanvas {
+      outline: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="myCanvas" width="300" height="150"></canvas>
+
+  <img id="image">
+
+
+
+
+  <!-- Form Generated Canvas -->
+
+  <canvas id="generatedCanvas" width="400" height="150"></canvas>
+
+  <div id="backgroundColorInputContainer">
+    <p>Select a background color:</p>
+
+    <div>
+
+      <form id="backgroundColorInputForm">
+        <input type="radio" id="colorChoice1" name="backgroundColor" value="white" checked>
+        <label for="contactChoice1">White</label>
+
+        <input type="radio" id="colorChoice2" name="backgroundColor" value="black">
+        <label for="contactChoice1">Black</label>
+
+        <!-- TODO: Add other color choices. Possibly make the buttons the color of the background themselves -->
+
+      </form>
+      <pre id="colorSelection"></pre>
+
+    </div>
+
+  </div>
+
+  <div id="textInput">
+    <!-- TODO: Get rid of "maxlength"/change to 255(?) after incorporating text wrapping -->
+    <input type="text" id="inputStatusText" placeholder="Type status here" maxlength="24">
+    <!-- <Button id="addStatusText">Add</Button> -->
+  </div>
+
+
+  <script src="./js/statusUpdateImageGenerator.js"></script>
+</body>
+
+</html>
