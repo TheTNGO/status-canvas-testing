@@ -43,7 +43,10 @@
         
         let bgColorSelection;
         let submittedText = "";
+        let textLineLength = submittedText.length
+        const maxLineChars = 24;
 
+        // Font Styles
         ctx2.font = "30px Arial";
 
         /* Input wiring */
@@ -53,16 +56,12 @@
         
         const textInput = document.querySelector('#inputStatusText');
         textInput.addEventListener('keyup', addText);
-        
-        // const button = document.querySelector('#addStatusText');
-        // button.addEventListener("click", addText);
-
-
+     
         function addText() {
             submittedText = textInput.value;
             ctx2.fillStyle = 'red';
-            ctx2.clearRect(0, 0, 400, 150);
-            ctx2.fillText(submittedText, 200, 80);
+            ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
+            ctx2.fillText(submittedText, 200, 80); // repopulates canvas after every clear with current "submittedText"
             ctx2.textAlign="center";
                 console.log(submittedText);
         }
@@ -77,21 +76,17 @@
 
         const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
 
-        // const log = document.querySelector('#colorSelection'); // may not need this anymore
-
-        // "submit" to allow a separate preview page
-        // "click" to allow a dynamic preview page
         backgroundColorInputForm.addEventListener("click", function () {
             let bgColorData = new FormData(backgroundColorInputForm);
             
             // Test code
             let output = "";
             for (const entry of bgColorData) {
-                // output = entry[0] + "=" + entry[1] + "\r"; // entry[1] is the current color selection
                 console.log(entry[0]);
                 console.log(entry[1]); // what data type is entry[1]?
                 bgColorSelection = entry[1];
             };
+            // END Test Code
 
             console.log(bgColorSelection);
             addBackgroundColor(bgColorSelection);
