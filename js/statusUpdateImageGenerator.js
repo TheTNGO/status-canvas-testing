@@ -1,42 +1,5 @@
 (function () {
 
-    let testline = "hello";
-    console.log(testline.substring(0, 3));
-
-    /* First Drawing Example */
-
-    // select canvas tag in HTML
-    const myCanvas = document.querySelector('#myCanvas');
-
-    // initialize "drawing object" within "myCanvas" canvas
-    const ctx = myCanvas.getContext('2d');
-
-    console.log({ ctx });
-
-    // drawing attributes/image attributes
-    ctx.fillStyle = 'teal'; // changing color of the next "drawing method"
-    ctx.fillRect(0, 0, 300, 150); // pixel start coordinates/size of drawing INSIDE canvas
-
-    /* New Text drawing methods */
-
-    // (First text method)
-    ctx.fillStyle = 'black'; // change .fillstyle color of the next "drawing method" FIRST
-    ctx.font = "50px Arial";
-    ctx.fillText("Wuut", 10, 50);
-
-    // Second Text method
-    ctx.fillStyle = 'red'
-    ctx.fillText("Ayyyy", 10, 110);
-
-    // Image Data manipulation
-    const imgData = ctx.getImageData(0, 0, 320, 200);
-
-    console.log({ imgData });
-
-    document.getElementById("image").src = myCanvas.toDataURL();
-
-
-
     /* Manipulating drawing with Text Input */
 
     /* Canvas Variables */
@@ -52,14 +15,17 @@
     let lines = [];
     let currentLine = 0;
 
-    
+    let setNewLine = false;
 
     lines[currentLine] = {
         text: "",
         yPos: currentLineYPos,
+        fullLine: false,
+        
     }
 
-    
+
+
     // Font Styles
     ctx2.font = "30px Arial";
 
@@ -79,27 +45,47 @@
 
     function addText() {
 
-       
+
+
+        console.log(lines);
+
         console.log(submittedText);
         submittedText = textInput.value;
 
         console.log(lines[currentLine].text.length);
+        console.log("setNewLine " + setNewLine)
 
-        if (lines[currentLine].text.length > 24) {
-            lines[currentLine].yPos -= 20;
-            currentLine += 1;
-            
-            console.log(currentLine);
-            lines[currentLine] = {
-                text: "",
-                yPos: currentLineYPos,
-            }
-            lines.push(lines[currentLine]);
-            
+        if (currentLine === 0){
+            lines[currentLine].text = submittedText;
+        } else if(currentLine > 0){
+            lines[currentLine].text = submittedText.substr(23, (lines[currentLine].text.length + 1))  // line[1]'s text becomes the substring of submittedText (23, number of letters past current length)
+            console.log("Current Line Length: " + lines[currentLine].text.length)
         }
 
+        if (lines[currentLine].text.length > 23) {
+            setNewLine = true;          
+
+        } 
+
+        if (setNewLine === true){
+
+            lines[currentLine].yPos -= 20; // currentLine (lines[0]) goes up on canvas
+            currentLine += 1; // start working on lines[1]
+            currentLineYPos += 20;
+
+            lines[currentLine] = { // initiate properties of line[1]
+                text: " ",
+                yPos: currentLineYPos,
+            }
+
+
+            setNewLine = false; // don't go through this loop again
+
+        }
         
-        lines[currentLine].text = submittedText;
+
+
+        
 
         // start render    
         ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
@@ -122,6 +108,9 @@
         ctx2.textAlign = "center";
     }
 
+
+
+
     // Background Color Input
 
     const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
@@ -132,8 +121,7 @@
         // Test code
         let output = "";
         for (const entry of bgColorData) {
-            console.log(entry[0]);
-            console.log(entry[1]); // what data type is entry[1]?
+      
             bgColorSelection = entry[1];
         };
         // END Test Code
