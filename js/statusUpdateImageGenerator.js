@@ -46,10 +46,20 @@
 
     let bgColorSelection;
     let submittedText = "";
-    // let textLineLength = submittedText.length
     const maxLineChars = 24;
-    let currentLineYPosition = 80;
+    let currentLineYPos = 80;
 
+    let lines = [];
+    let currentLine = 0;
+
+    
+
+    lines[currentLine] = {
+        text: "",
+        yPos: currentLineYPos,
+    }
+
+    
     // Font Styles
     ctx2.font = "30px Arial";
 
@@ -61,18 +71,47 @@
     const textInput = document.querySelector('#inputStatusText');
     textInput.addEventListener('keyup', addText);
 
+    printLines = function () {
+        for (let line in lines) {
+            addText();
+        }
+    }
+
     function addText() {
+
+       
         console.log(submittedText);
         submittedText = textInput.value;
-        ctx2.fillStyle = 'red';
-        ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
-        if (submittedText.length > 24) {
-            let line01 = submittedText.substring(0, 24);
-            console.log('For Loop is working');
-            console.log(line01);
-                        /* Step 3 */ currentLineYPosition += 10; // need to differentiate between lines
+
+        console.log(lines[currentLine].text.length);
+
+        if (lines[currentLine].text.length > 24) {
+            lines[currentLine].yPos -= 20;
+            currentLine += 1;
+            
+            console.log(currentLine);
+            lines[currentLine] = {
+                text: "",
+                yPos: currentLineYPos,
+            }
+            lines.push(lines[currentLine]);
+            
         }
-        ctx2.fillText(submittedText, 200, currentLineYPosition); // repopulates canvas after every clear with current "submittedText"
+
+        
+        lines[currentLine].text = submittedText;
+
+        // start render    
+        ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
+        // filled with current canvas dimensions
+        ctx2.fillStyle = 'red';
+
+        // print all lines
+        for (i = 0; i < lines.length; i++) {
+            ctx2.fillText(lines[i].text, 200, lines[i].yPos);
+            ctx2.textAlign = "center";
+        }
+
         ctx2.textAlign = "center";
         // console.log(submittedText);
     }
