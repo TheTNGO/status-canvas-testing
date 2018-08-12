@@ -35,25 +35,12 @@
 
 
     const textInput = document.querySelector('#inputStatusText');
-    textInput.addEventListener('keyup', addText);
-
-    printLines = function () {
-        for (let line in lines) {
-            addText();
-        }
-    }
+    textInput.addEventListener('keyup ', addText);
 
     function addText() {
+ 
 
-
-
-        console.log(lines);
-
-        console.log(submittedText);
         submittedText = textInput.value;
-
-        console.log(lines[currentLine].text.length);
-        console.log("setNewLine " + setNewLine)
 
         if (currentLine === 0){
             lines[currentLine].text = submittedText;
@@ -83,10 +70,6 @@
 
         }
         
-
-
-        
-
         // start render    
         ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
         // filled with current canvas dimensions
@@ -96,10 +79,16 @@
         for (i = 0; i < lines.length; i++) {
             ctx2.fillText(lines[i].text, 200, lines[i].yPos);
             ctx2.textAlign = "center";
+            console.log("I loooped")
         }
 
         ctx2.textAlign = "center";
         // console.log(submittedText);
+
+        console.log(lines);
+        console.log(lines[currentLine].text.length);
+        console.log("setNewLine " + setNewLine)
+        console.log(submittedText);
     }
 
     function refreshText() {
