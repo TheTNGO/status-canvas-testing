@@ -7,24 +7,15 @@
     const generatedCanvas = document.querySelector('#generatedCanvas');
     const ctx2 = generatedCanvas.getContext('2d');
 
-    let bgColorSelection;
+    let bgColorSelection = 'white';
     let submittedText = "";
-    const maxLineChars = 24;
+    const charLimit = 24;
     let currentLineYPos = 80;
 
     let lines = [];
     let currentLine = 0;
 
     let setNewLine = false;
-
-    lines[currentLine] = {
-        text: "",
-        yPos: currentLineYPos,
-        fullLine: false,
-        
-    }
-
-
 
     // Font Styles
     ctx2.font = "30px Arial";
@@ -35,124 +26,131 @@
 
 
     const textInput = document.querySelector('#inputStatusText');
-    textInput.addEventListener('keyup', addText);
+    // textInput.addEventListener('keyup', addText);
 
-    printLines = function () {
-        for (let line in lines) {
-            addText();
-        }
-    }
+    const textInputSubmit = document.querySelector('#addStatusText');
+    textInputSubmit.addEventListener('click', addText);
 
     function addText() {
 
+        console.log("I'm addiiiiiiiiiiiiing")
 
-
-        console.log(lines);
-
-        console.log(submittedText);
         submittedText = textInput.value;
+        let numOfLines = 1;
 
-        console.log(lines[currentLine].text.length);
-        console.log("setNewLine " + setNewLine)
+        console.log("didn't crash here")
 
-        if (currentLine === 0){
-            lines[currentLine].text = submittedText;
-        } else if(currentLine > 0){
-            lines[currentLine].text = submittedText.substr(23, (lines[currentLine].text.length + 1))  // line[1]'s text becomes the substring of submittedText (23, number of letters past current length)
-            console.log("Current Line Length: " + lines[currentLine].text.length)
-        }
+        // Input Display/Word Wrapping
 
-        if (lines[currentLine].text.length > 23) {
-            setNewLine = true;          
-
-        } 
-
-        if (setNewLine === true){
-
-            lines[currentLine].yPos -= 20; // currentLine (lines[0]) goes up on canvas
-            currentLine += 1; // start working on lines[1]
-            currentLineYPos += 20;
-
-            lines[currentLine] = { // initiate properties of line[1]
-                text: " ",
-                yPos: currentLineYPos,
-            }
-
-
-            setNewLine = false; // don't go through this loop again
+        if (submittedText.length > charLimit) { // charLimit currently at 24
+            numOfLines = Math.ceil(submittedText.length / charLimit);
+            console.log(numOfLines);
+            console.log("didn't crash here")
 
         }
-        
 
+        console.log("didn't crash here")
 
-        
 
         // start render    
         ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
         // filled with current canvas dimensions
         ctx2.fillStyle = 'red';
 
-        // print all lines
-        for (i = 0; i < lines.length; i++) {
-            ctx2.fillText(lines[i].text, 200, lines[i].yPos);
-            ctx2.textAlign = "center";
+
+
+        for (let i = 0; i < numOfLines; i++) {
+            console.log("didn't crash here")
+
+            if (i === 0) {
+                lines[i] = {
+                    text: submittedText.substring(0, charLimit),
+                    yPos: currentLineYPos,
+                }
+            } else {
+                // previous line yPos shift
+                for (let j = 0; j < i; j++) {
+                    lines[j].yPos -= 15;
+                }
+
+                // grabbing subtring of next line
+                lines[i] = {
+                    text: submittedText.substring((charLimit * i), (charLimit * (i + 1))),
+                    yPos: currentLineYPos + 10,
+                }
+                console.log(lines[i].text);
+            }
+
         }
 
-        ctx2.textAlign = "center";
+        // print all lines
+        for (i = 0; i < lines.length; i++) {
+            ctx2.textAlign = "center";
+            ctx2.fillText(lines[i].text, 200, lines[i].yPos);
+
+            console.log("In the render loop")
+        }
+
+        // clear lines[] in case of subsequent renders
+        for (let k = 0; k < lines.length; k++){
+            lines.pop();
+        }
+
         // console.log(submittedText);
     }
 
-    function refreshText() {
-        ctx2.fillStyle = 'red';
-        ctx2.fillText(submittedText, 200, currentLineYPosition);
-        ctx2.textAlign = "center";
-    }
+    // function refreshText() {
+    //     addBackgroundColor(bgColorSelection);
+    //     ctx2.fillStyle = 'red';
+    //     ctx2.fillText(submittedText, 200, currentLineYPosition);
+    //     ctx2.textAlign = "center";
+    // }
 
 
 
 
-    // Background Color Input
+    // // Background Color Input
 
-    const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
+    // const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
 
-    backgroundColorInputForm.addEventListener("click", function () {
-        let bgColorData = new FormData(backgroundColorInputForm);
+    // backgroundColorInputForm.addEventListener("click", function () {
+    //     let bgColorData = new FormData(backgroundColorInputForm);
 
-        // Test code
-        let output = "";
-        for (const entry of bgColorData) {
-      
-            bgColorSelection = entry[1];
-        };
-        // END Test Code
+    //     // Test code
+    //     let output = "";
+    //     for (const entry of bgColorData) {
 
-        console.log(bgColorSelection);
-        addBackgroundColor(bgColorSelection);
-    })
+    //         bgColorSelection = entry[1];
+    //     };
+    //     // END Test Code
 
-    // fill entire canvas with background color
-    // redraw text after this is done.
-    function addBackgroundColor(color) {
+    //     console.log(bgColorSelection);
+    //     addBackgroundColor(bgColorSelection);
+    // })
 
-        /* TODO: Add other color settings */
+    // // fill entire canvas with background color
+    // // redraw text after this is done.
+    // function addBackgroundColor(color) {
 
-        if (color === "black") {
-            ctx2.fillStyle = 'black'; // changing color of the next "drawing method"
-            ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
-            refreshText();
+    //     /* TODO: Add other color settings */
 
-            // ctx2.fillStyle = 'red' /* TODO: Fix these two lines to possibly work with "addText()" */
-            // ctx2.fillText(submittedText, 60, 110);
+    //     if (color === "black") {
+    //         ctx2.fillStyle = 'black'; // changing color of the next "drawing method"
+    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
+    //         refreshText();
 
-        } else if (color === "white") {
-            ctx2.fillStyle = 'white'; // changing color of the next "drawing method"
-            ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
-            refreshText();
-            // ctx2.fillStyle = 'red'
-            // ctx2.fillText(submittedText, 60, 110);
-        }
+    //         // ctx2.fillStyle = 'red' /* TODO: Fix these two lines to possibly work with "addText()" */
+    //         // ctx2.fillText(submittedText, 60, 110);
 
-    }
+    //     } else if (color === "white") {
+    //         ctx2.fillStyle = 'white'; // changing color of the next "drawing method"
+    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
+    //         refreshText();
+    //         // ctx2.fillStyle = 'red'
+    //         // ctx2.fillText(submittedText, 60, 110);
+    //     }
+
+    // }
 
 
 
