@@ -1,3 +1,4 @@
+
 (function () {
 
     /* Manipulating drawing with Text Input */
@@ -48,26 +49,32 @@
         if (submittedText.length > charLimit) { // charLimit currently at 24
             numOfLines = Math.ceil(submittedText.length / charLimit);
             console.log(numOfLines);
+
         }
 
 
+        // Word wrapping calculations
+
+        let lineTextCut;
 
         for (let i = 0; i < numOfLines; i++) {
 
+            // First line
             if (i === 0) {
 
                 let submittedLineText = submittedText.substring(0, charLimit);
-                console.log("submittedLineText: " + submittedLineText);
+                console.log("Line 1: submittedLineText: " + submittedLineText);
+
                 let lastSpaceIndex = submittedLineText.lastIndexOf(" ");
                 let finalLineText;
 
+
                 if (submittedText.length > charLimit) {
                     if (lastSpaceIndex !== (charLimit - 1)) {
-
-                        let lineTextCut = submittedLineText.substring(lastSpaceIndex, charLimit);
-                        console.log('lineTextCut: ' + lineTextCut);
+                        lineTextCut = submittedLineText.substring(lastSpaceIndex + 1, charLimit);
+                        console.log('Line 1: lineTextCut: ' + lineTextCut);
                         finalLineText = submittedLineText.substring(0, lastSpaceIndex);
-                        console.log('finalLineText: ' + finalLineText)
+                        console.log('Line 1: finalLineText: ' + finalLineText)
                     } else {
                         finalLineText = submittedText.substring(0, charLimit);
                     }
@@ -84,25 +91,68 @@
                     }
                 }
 
-
+                // All other lines
             } else {
+
+                /* Varibles */
+
+                let startingLineTextTemp = lineTextCut + submittedText.substring((charLimit * i), (charLimit * (i + 1)));
+
+                lineTextCut = startingLineTextTemp.substring(charLimit);
+                console.log(lineTextCut)
+
+                submittedLineText = startingLineTextTemp.substring(0, charLimit);
+                console.log(lineTextCut)
+
+                let lastSpaceIndex = submittedLineText.lastIndexOf(" ");
+                let finalLineText;
+
+                /* Wrap Calc */
+
+                if (submittedLineText.length > charLimit) {
+                    if (lastSpaceIndex !== (charLimit * (i + 1))) {
+
+                        lineTextCut += submittedLineText.substring(lastSpaceIndex + 1, charLimit);
+                        console.log('Line 2: lineTextCut: ' + lineTextCut);
+
+                        finalLineText = submittedLineText.substring(0, lastSpaceIndex);
+                        console.log('Line 2: finalLineText: ' + finalLineText)
+
+                    }  // else {
+                    //     submittedLineText = submittedText.substring(0, charLimit);
+                    // }
+
+
+                } else {
+                    finalLineText = submittedLineText
+                }
+
+                console.log('finalLineText length 2: ' + finalLineText.length);
+                console.log('Line ' + (i + 1) + ' cut after calc: ' + lineTextCut);
+                console.log('Line ' + (i + 1) + ' cut length after calc: ' + lineTextCut.length);
+
                 // previous line yPos shift
                 for (let j = 0; j < i; j++) {
-                    lines[j].yPos -= 15;
+                    lines[j].yPos -= 20;
                 }
 
                 // grabbing subtring of next line
                 lines[i] = {
-                    text: submittedText.substring((charLimit * i), (charLimit * (i + 1))),
+                    text: finalLineText,
                     yPos: currentLineYPos + 10,
                 }
-                console.log(lines[i].text);
+
+                if(lineTextCut.length !== ""){
+                    numOfLines += 1;
+                }
+
+
             }
 
         }
 
         // start render    
-        ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
+        ctx2.clearRect(0, 0, 400, 150); // clears canvas for next render
         ctx2.fillStyle = 'red';
 
         // print all lines
