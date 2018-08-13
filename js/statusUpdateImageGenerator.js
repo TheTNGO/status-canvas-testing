@@ -28,6 +28,7 @@
     const textInput = document.querySelector('#inputStatusText');
     // textInput.addEventListener('keyup', addText);
 
+
     const textInputSubmit = document.querySelector('#addStatusText');
     textInputSubmit.addEventListener('click', addText);
 
@@ -38,35 +39,52 @@
         submittedText = textInput.value;
         let numOfLines = 1;
 
-        console.log("didn't crash here")
+        let spaceIndex = submittedText.lastIndexOf(" ");
+        console.log("Last Space Index: " + spaceIndex);
 
         // Input Display/Word Wrapping
 
+        // calculate numOfLines
         if (submittedText.length > charLimit) { // charLimit currently at 24
             numOfLines = Math.ceil(submittedText.length / charLimit);
             console.log(numOfLines);
-            console.log("didn't crash here")
-
         }
-
-        console.log("didn't crash here")
-
-
-        // start render    
-        ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
-        // filled with current canvas dimensions
-        ctx2.fillStyle = 'red';
 
 
 
         for (let i = 0; i < numOfLines; i++) {
-            console.log("didn't crash here")
 
             if (i === 0) {
-                lines[i] = {
-                    text: submittedText.substring(0, charLimit),
-                    yPos: currentLineYPos,
+
+                let submittedLineText = submittedText.substring(0, charLimit);
+                console.log("submittedLineText: " + submittedLineText);
+                let lastSpaceIndex = submittedLineText.lastIndexOf(" ");
+                let finalLineText;
+
+                if (submittedText.length > charLimit) {
+                    if (lastSpaceIndex !== (charLimit - 1)) {
+
+                        let lineTextCut = submittedLineText.substring(lastSpaceIndex, charLimit);
+                        console.log('lineTextCut: ' + lineTextCut);
+                        finalLineText = submittedLineText.substring(0, lastSpaceIndex);
+                        console.log('finalLineText: ' + finalLineText)
+                    } else {
+                        finalLineText = submittedText.substring(0, charLimit);
+                    }
+
+                    lines[i] = {
+                        text: finalLineText,
+                        yPos: currentLineYPos,
+                    }
+
+                } else {
+                    lines[i] = {
+                        text: submittedText.substring(0, (submittedText.length)),
+                        yPos: currentLineYPos,
+                    }
                 }
+
+
             } else {
                 // previous line yPos shift
                 for (let j = 0; j < i; j++) {
@@ -83,6 +101,10 @@
 
         }
 
+        // start render    
+        ctx2.clearRect(0, 0, 400, 150); // clears canvas after every keypress
+        ctx2.fillStyle = 'red';
+
         // print all lines
         for (i = 0; i < lines.length; i++) {
             ctx2.textAlign = "center";
@@ -92,7 +114,7 @@
         }
 
         // clear lines[] in case of subsequent renders
-        for (let k = 0; k < lines.length; k++){
+        for (let k = 0; k < lines.length; k++) {
             lines.pop();
         }
 
