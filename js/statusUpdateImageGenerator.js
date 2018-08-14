@@ -1,4 +1,9 @@
 
+// TODO: 
+// make width size a variable
+// figure out line spacing
+// incorporate bgColorSelection
+
 (function () {
 
     /* Manipulating drawing with Text Input */
@@ -10,8 +15,8 @@
 
     let bgColorSelection = 'white';
     let submittedText = "";
-    const charLimit = 24;
-    let currentLineYPos = 80;
+    const charLimit = 36;
+    let currentLineYPos = 250;
 
     let lines = [];
     let currentLine = 0;
@@ -19,7 +24,7 @@
     let setNewLine = false;
 
     // Font Styles
-    ctx2.font = "30px Arial";
+    ctx2.font = "20px Arial";
 
     /* Input wiring */
 
@@ -33,6 +38,8 @@
     const textInputSubmit = document.querySelector('#addStatusText');
     textInputSubmit.addEventListener('click', addText);
 
+
+
     function addText() {
 
         console.log("I'm addiiiiiiiiiiiiing")
@@ -40,8 +47,7 @@
         submittedText = textInput.value;
         let numOfLines = 1;
 
-        let spaceIndex = submittedText.lastIndexOf(" ");
-        console.log("Last Space Index: " + spaceIndex);
+
 
         // Input Display/Word Wrapping
 
@@ -56,8 +62,14 @@
         // Word wrapping calculations
 
         let lineTextCut;
+        let startingLineTextTemp;
 
         for (let i = 0; i < numOfLines; i++) {
+
+            console.log(lineTextCut);
+
+            let lineTextCutTemp = lineTextCut;
+
 
             // First line
             if (i === 0) {
@@ -69,7 +81,7 @@
                 let finalLineText;
 
 
-                if (submittedText.length > charLimit) {
+                if (submittedText.length >= charLimit) {
                     if (lastSpaceIndex !== (charLimit - 1)) {
                         lineTextCut = submittedLineText.substring(lastSpaceIndex + 1, charLimit);
                         console.log('Line 1: lineTextCut: ' + lineTextCut);
@@ -77,6 +89,7 @@
                         console.log('Line 1: finalLineText: ' + finalLineText)
                     } else {
                         finalLineText = submittedText.substring(0, charLimit);
+                        console.log('why am I here?')
                     }
 
                     lines[i] = {
@@ -91,142 +104,93 @@
                     }
                 }
 
-                // All other lines
+                console.log('end of first line')
+
+            // All other lines
+            
             } else {
+            /* Varibles */
 
-                /* Varibles */
+                if (lineTextCut.length) {
+                    startingLineTextTemp = lineTextCut + submittedText.substring((charLimit * i), (charLimit * (i + 1)));
 
-                let startingLineTextTemp = lineTextCut + submittedText.substring((charLimit * i), (charLimit * (i + 1)));
+                } else {
+                    startingLineTextTemp = submittedText.substring((charLimit * i), (charLimit * (i + 1)));
+
+                }
+
 
                 lineTextCut = startingLineTextTemp.substring(charLimit);
-                console.log(lineTextCut)
+                console.log(lineTextCut);
 
-                submittedLineText = startingLineTextTemp.substring(0, charLimit);
+                let submittedLineText = startingLineTextTemp.substring(0, charLimit);
                 console.log(lineTextCut)
 
                 let lastSpaceIndex = submittedLineText.lastIndexOf(" ");
+
                 let finalLineText;
 
                 /* Wrap Calc */
 
-                if (submittedLineText.length > charLimit) {
-                    if (lastSpaceIndex !== (charLimit * (i + 1))) {
-
-                        lineTextCut += submittedLineText.substring(lastSpaceIndex + 1, charLimit);
-                        console.log('Line 2: lineTextCut: ' + lineTextCut);
+                if (lineTextCut.length !== 0) {
+                    if (lastSpaceIndex !== (charLimit - 1)) {
+                        lineTextCut = submittedLineText.substring(lastSpaceIndex + 1, charLimit) + lineTextCut;
 
                         finalLineText = submittedLineText.substring(0, lastSpaceIndex);
                         console.log('Line 2: finalLineText: ' + finalLineText)
-
-                    }  // else {
-                    //     submittedLineText = submittedText.substring(0, charLimit);
-                    // }
-
-
+                    } else {
+                        finalLineText = submittedLineText;
+                    }
                 } else {
-                    finalLineText = submittedLineText
+                    finalLineText = submittedLineText;
                 }
 
-                console.log('finalLineText length 2: ' + finalLineText.length);
-                console.log('Line ' + (i + 1) + ' cut after calc: ' + lineTextCut);
-                console.log('Line ' + (i + 1) + ' cut length after calc: ' + lineTextCut.length);
-
                 // previous line yPos shift
-                for (let j = 0; j < i; j++) {
+                for (let j = 0; j < lines.length; j++) {
                     lines[j].yPos -= 20;
+                    currentLineYPos
                 }
 
                 // grabbing subtring of next line
                 lines[i] = {
                     text: finalLineText,
-                    yPos: currentLineYPos + 10,
+                    yPos: currentLineYPos,
                 }
 
-                if(lineTextCut.length !== ""){
+                console.log('end line ' + (i + 1))
+
+                if (lineTextCut.length !== 0) {
                     numOfLines += 1;
+                    // console.log('Line ' + (i + 1) + ' finalLineText length: ' + finalLineText.length);
+                    // console.log('Line ' + (i + 1) + ' cut after calc: ' + lineTextCut);
+                    // console.log('Line ' + (i + 1) + ' cut length after calc: ' + lineTextCut.length);
+                } else {
+                    break;
                 }
-
-
             }
-
+            console.log('loop finished');
         }
 
-        // start render    
-        ctx2.clearRect(0, 0, 400, 150); // clears canvas for next render
+        /* Start Render */
+        
+        ctx2.clearRect(0, 0, 400, 500); // clears canvas for next render
         ctx2.fillStyle = 'red';
 
         // print all lines
-        for (i = 0; i < lines.length; i++) {
+        for (let x = 0; x < lines.length; x++) {
             ctx2.textAlign = "center";
-            ctx2.fillText(lines[i].text, 200, lines[i].yPos);
-
+            ctx2.fillText(lines[x].text, 200, lines[x].yPos);
             console.log("In the render loop")
         }
 
         // clear lines[] in case of subsequent renders
         for (let k = 0; k < lines.length; k++) {
             lines.pop();
+
         }
 
-        // console.log(submittedText);
+        console.log(lines);
+
     }
-
-    // function refreshText() {
-    //     addBackgroundColor(bgColorSelection);
-    //     ctx2.fillStyle = 'red';
-    //     ctx2.fillText(submittedText, 200, currentLineYPosition);
-    //     ctx2.textAlign = "center";
-    // }
-
-
-
-
-    // // Background Color Input
-
-    // const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
-
-    // backgroundColorInputForm.addEventListener("click", function () {
-    //     let bgColorData = new FormData(backgroundColorInputForm);
-
-    //     // Test code
-    //     let output = "";
-    //     for (const entry of bgColorData) {
-
-    //         bgColorSelection = entry[1];
-    //     };
-    //     // END Test Code
-
-    //     console.log(bgColorSelection);
-    //     addBackgroundColor(bgColorSelection);
-    // })
-
-    // // fill entire canvas with background color
-    // // redraw text after this is done.
-    // function addBackgroundColor(color) {
-
-    //     /* TODO: Add other color settings */
-
-    //     if (color === "black") {
-    //         ctx2.fillStyle = 'black'; // changing color of the next "drawing method"
-    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
-    //         refreshText();
-
-    //         // ctx2.fillStyle = 'red' /* TODO: Fix these two lines to possibly work with "addText()" */
-    //         // ctx2.fillText(submittedText, 60, 110);
-
-    //     } else if (color === "white") {
-    //         ctx2.fillStyle = 'white'; // changing color of the next "drawing method"
-    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
-    //         refreshText();
-    //         // ctx2.fillStyle = 'red'
-    //         // ctx2.fillText(submittedText, 60, 110);
-    //     }
-
-    // }
-
-
-
-
-
 
 })();

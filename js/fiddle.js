@@ -93,4 +93,84 @@ const generatedCanvas = document.querySelector('#generatedCanvas');
     //     console.log(lines[currentLine].text.length);
     //     console.log("setNewLine " + setNewLine)
 
-    
+
+
+
+/* BG Color Code */
+
+// if (startingLineTextTemp.length > charLimit) {
+                //     if (lastSpaceIndex !== (charLimit - 1)) {
+                //         lineTextCut = startingLineTextTemp.substring(charLimit);
+                //         console.log(lineTextCut)
+                //     }
+ // }
+
+  // if (submittedLineText.length > charLimit) {
+                //     if (lastSpaceIndex !== (charLimit * (i + 1))) {
+
+                //         lineTextCut += submittedLineText.substring(lastSpaceIndex + 1, charLimit);
+
+                //         finalLineText = submittedLineText.substring(0, lastSpaceIndex);
+
+                //     }  // else {
+                //     //     submittedLineText = submittedText.substring(0, charLimit);
+                //     // }
+
+
+                // } else {
+                //     finalLineText = submittedLineText
+                // }
+
+
+                 // function refreshText() {
+    //     addBackgroundColor(bgColorSelection);
+    //     ctx2.fillStyle = 'red';
+    //     ctx2.fillText(submittedText, 200, currentLineYPosition);
+    //     ctx2.textAlign = "center";
+    // }
+
+
+
+
+    // // Background Color Input
+
+    // const backgroundColorInputForm = document.querySelector('#backgroundColorInputForm');
+
+    // backgroundColorInputForm.addEventListener("click", function () {
+    //     let bgColorData = new FormData(backgroundColorInputForm);
+
+    //     // Test code
+    //     let output = "";
+    //     for (const entry of bgColorData) {
+
+    //         bgColorSelection = entry[1];
+    //     };
+    //     // END Test Code
+
+    //     console.log(bgColorSelection);
+    //     addBackgroundColor(bgColorSelection);
+    // })
+
+    // // fill entire canvas with background color
+    // // redraw text after this is done.
+    // function addBackgroundColor(color) {
+
+    //     /* TODO: Add other color settings */
+
+    //     if (color === "black") {
+    //         ctx2.fillStyle = 'black'; // changing color of the next "drawing method"
+    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
+    //         refreshText();
+
+    //         // ctx2.fillStyle = 'red' /* TODO: Fix these two lines to possibly work with "addText()" */
+    //         // ctx2.fillText(submittedText, 60, 110);
+
+    //     } else if (color === "white") {
+    //         ctx2.fillStyle = 'white'; // changing color of the next "drawing method"
+    //         ctx2.fillRect(0, 0, 400, 150); // pixel start coordinates/size of drawing INSIDE canvas
+    //         refreshText();
+    //         // ctx2.fillStyle = 'red'
+    //         // ctx2.fillText(submittedText, 60, 110);
+    //     }
+
+    // }
