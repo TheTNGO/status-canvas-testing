@@ -39,8 +39,17 @@
 
 
     const textInputSubmit = document.querySelector('#addStatusText');
-    textInputSubmit.addEventListener('click', addText);
+    textInputSubmit.addEventListener('click', function () {
+        clearLines();
+        addText();
+    })
 
+
+    function clearLines() {
+        while (lines.length !== 0) {
+            lines.pop();
+        }
+    }
 
 
     function addText() {
@@ -48,9 +57,7 @@
         console.log("I'm addiiiiiiiiiiiiing")
 
         // clear lines[] in case of subsequent renders
-        while (lines.length !== 0){
-            lines.pop();
-        }
+
 
 
 
@@ -76,7 +83,7 @@
 
         for (let i = 0; i < numOfLines; i++) {
 
-            
+
 
             // First line
             if (i === 0) {
@@ -156,14 +163,14 @@
                 /* Wrap Calc */
 
                 // if (lineTextCut.length !== 0) {
-                    if (lastSpaceIndex !== (charLimit - 1)) {
-                        lineTextCut = submittedLineText.substring(lastSpaceIndex + 1, charLimit) + lineTextCut;
+                if (lastSpaceIndex !== (charLimit - 1)) {
+                    lineTextCut = submittedLineText.substring(lastSpaceIndex + 1, charLimit) + lineTextCut;
 
-                        finalLineText = submittedLineText.substring(0, lastSpaceIndex);
-                        console.log('Line 2: finalLineText: ' + finalLineText)
-                    } else {
-                        finalLineText = submittedLineText;
-                    }
+                    finalLineText = submittedLineText.substring(0, lastSpaceIndex);
+                    console.log('Line 2: finalLineText: ' + finalLineText)
+                } else {
+                    finalLineText = submittedLineText;
+                }
                 // } else {
                 //     finalLineText = submittedLineText;
                 // }
@@ -182,21 +189,21 @@
 
                 console.log('end line ' + (i + 1))
 
-                let nextLine = submittedText.substring((charLimit * (i+1)), (charLimit * (i + 2)));
+                let nextLine = submittedText.substring((charLimit * (i + 1)), (charLimit * (i + 2)));
 
                 console.log(nextLine);
                 console.log(lines.length);
                 if ((typeof lineTextCut !== "undefined") || (lineTextCut.length > 0)) {
-                    
-                    if (nextLine.length === 0){
-                        
-        
-                        if (lines[i].text.length + lineTextCut.length < charLimit){
+
+                    if (nextLine.length === 0) {
+
+
+                        if (lines[i].text.length + lineTextCut.length < charLimit) {
                             lines[i].text += ' ' + lineTextCut;
-                        } else{
+                        } else {
                             for (let j = 0; j < lines.length; j++) {
                                 lines[j].yPos -= 20;
-                                
+
                             }
                             lines[i + 1] = {
                                 text: lineTextCut,
@@ -204,24 +211,24 @@
                             }
                         }
                         // grabbing subtring of next line
-                        
+
 
                         // lines.pop();
-                        
+
                         break;
 
-                    } 
-                    else{
+                    }
+                    else {
                         numOfLines += 1;
 
                     }
-                   
+
                     // console.log('Line ' + (i + 1) + ' finalLineText length: ' + finalLineText.length);
                     // console.log('Line ' + (i + 1) + ' cut after calc: ' + lineTextCut);
                     // console.log('Line ' + (i + 1) + ' cut length after calc: ' + lineTextCut.length);
-                } 
+                }
 
-                
+
             }
             console.log('loop finished');
         }
@@ -231,7 +238,9 @@
         ctx2.clearRect(0, 0, 400, 500); // clears canvas for next render
 
         addBackgroundColor(bgColorSelection);
-        ctx2.fillStyle = 'red';
+
+
+        // ctx2.fillStyle = 'red'; /* Text fillstyle will be incorporated in bgColorSelection
 
         // print all lines
         for (let x = 0; x < lines.length; x++) {
@@ -252,17 +261,23 @@
 
     backgroundColorInputForm.addEventListener("click", function () {
         let bgColorData = new FormData(backgroundColorInputForm);
+        console.log(bgColorData);
 
         // Test code
         let output = "";
-        for (const entry of bgColorData) {
 
+        for (z = 0; z > bgColorData.length; z++){
+            console.log(bgColorData[z]);
+        }
+        for (const entry of bgColorData) {
+            
             bgColorSelection = entry[1];
         };
         // END Test Code
 
         console.log(bgColorSelection);
         addBackgroundColor(bgColorSelection);
+        addText();
     })
 
     // fill entire canvas with background color
@@ -274,16 +289,17 @@
         if (color === "black") {
             ctx2.fillStyle = 'black'; // changing color of the next "drawing method"
             ctx2.fillRect(0, 0, 400, 500); // pixel start coordinates/size of drawing INSIDE canvas
-            // addText();
-            // ctx2.fillStyle = 'red' /* TODO: Fix these two lines to possibly work with "addText()" */
-            // ctx2.fillText(submittedText, 60, 110);
+
+            ctx2.fillStyle = 'white'; // text color
+
+            
 
         } else if (color === "white") {
             ctx2.fillStyle = 'white'; // changing color of the next "drawing method"
             ctx2.fillRect(0, 0, 400, 500); // pixel start coordinates/size of drawing INSIDE canvas
-            // addText();
-            // ctx2.fillStyle = 'red'
-            // ctx2.fillText(submittedText, 60, 110);
+
+            ctx2.fillStyle = 'black'; // text color
+
         }
 
     }
